@@ -23,14 +23,20 @@ This example provides recommended settings:
     - ARM_SUBSCRIPTION_ID
 
 3. Setings service principal Environment Variables on Windows System PC
+
     `setx ARM_SUBSCRIPTION_ID xxxx-xxxx-xxxx-xxxx`
+
     `setx ARM_CLIENT_ID xxxx-xxxx-xxxx-xxxx`    
+
     `setx ARM_CLIENT_SECRET xxxx-xxxx-xxxx-xxxx`
+
     `setx ARM_TENANT_ID xxxx-xxxx-xxxx-xxxx`
 
 4.  Plan, deploy, and destroy
     `terraform plan`
+
     `terraform apply`
+
     `terraform destroy`
 
 
