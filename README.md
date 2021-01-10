@@ -14,6 +14,7 @@ This example provides recommended settings:
 ## Get started with Terraform Cloud
 
 1. Download and install the [Terraform CLI] 
+
     `choco install terraform`
     
 1. Create a service principal in Azure and add the following keys to the workspace's environment variables
