@@ -47,6 +47,7 @@ This example provides recommended settings:
 
 ## UpLoad Logs
 1. 2021/01/16-----add terraform remote store states file into azure storage account
+    
     `git checkout remote_stats`
 
     
