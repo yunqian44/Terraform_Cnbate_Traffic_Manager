@@ -1,3 +1,11 @@
+terraform {
+  backend "azurerm" {
+    storage_account_name = "cnbateterraformstorage"
+    container_name       = "terraform-state"
+    key                  = "cnbate.terraform.stats"
+  }
+}
+
 provider "azurerm" {
   version = "~>2.0"
   features {}
