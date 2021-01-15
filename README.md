@@ -44,3 +44,9 @@ This example provides recommended settings:
 ## Use this doc and get your Terraform on!
 
 - https://www.terraform.io/docs/providers/azurerm/
+
+## UpLoad Logs
+1. 2021/01/16-----add terraform remote store states file into azure storage account
+    `git checkout remote_stats`
+
+    
