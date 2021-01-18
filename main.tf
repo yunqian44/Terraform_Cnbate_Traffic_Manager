@@ -1,5 +1,5 @@
 terraform {
-  required_version = "0.12.3"
+  #required_version = "0.12.3"
   backend "azurerm" {
     storage_account_name = "cnbateterraformstorage"
     container_name       = "terraform-state"
