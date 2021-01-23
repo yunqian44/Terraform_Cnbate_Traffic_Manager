@@ -1,27 +1,22 @@
 resource "azurerm_app_service_plan" "app_service_plan" {
-  name                = var.app_service_plan_name
-  location            = var.app_service_location
+  count               = var.enable && var.enable_app_service_plan && var.app_service_plan_count > 0 ? var.app_service_plan_count : 0
+  name                = element(var.app_service_plan_names, count.index)
+  location            = element(var.app_service_locations, count.index)
   resource_group_name = var.resource_group_name
 
-  #   sku {
-  #     tier = "Standard"
-  #     size = "S1"
-  #   }
-
-  sku = {
-    tier = var.app_service_plan.sku
-    size = var.app_service_plan.size
+  sku {
+    tier = lookup(element(var.app_service_plans, count.index), "tier")
+    size = lookup(element(var.app_service_plans, count.index), "size")
   }
 }
 
 resource "azurerm_app_service" "app_service" {
-  name                = var.app_service_name
-  location            = var.app_service_location
+  count               = var.enable && var.enable_app_service_plan && var.enable_app_service && var.app_service_count > 0 ? var.app_service_count : 0
+  name                = element(var.app_service_names, count.index)
+  location            = element(var.app_service_locations, count.index)
   resource_group_name = var.resource_group_name
-  app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
+  app_service_plan_id = element(azurerm_app_service_plan.app_service_plan.*.id, count.index)
 
-  #   app_settings = {
-  #     "ASPNETCORE_ENVIRONMENT" = "Production"
-  #   }
-  app_settings = var.app_settings
+
+  app_settings = element(var.app_settings, count.index)
 }
