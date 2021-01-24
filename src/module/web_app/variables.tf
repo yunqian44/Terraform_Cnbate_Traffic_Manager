@@ -1,46 +1,46 @@
 variable "enable" {
   type        = bool
   default     = false
-  description = ""
+  description = "(required) main switch whether to create the app web service"
 }
 
 variable "enable_app_service_plan" {
   type        = bool
   default     = false
-  description = ""
+  description = "(required) whether to create the app web service plan"
 }
 
 variable "app_service_plan_count" {
   type        = number
   default     = 0
-  description = ""
+  description = "(required) number of create the app web service plan"
 }
 
 variable "enable_app_service" {
   type        = bool
   default     = false
-  description = ""
+  description = "(required) whether to create the app web service"
 }
 
 variable "app_service_count" {
   type        = number
   default     = 0
-  description = ""
+  description = "(required) number of create the app web service"
 }
 
 variable "app_service_plan_names" {
   type        = list(string)
-  description = ""
+  description = "(required) name of create a web app plan"
 }
 
 variable "app_service_names" {
   type        = list(string)
-  description = ""
+  description = "(required) specifies the name of the app service."
 }
 
 variable "app_service_locations" {
   type        = list(string)
-  description = "The Azure Regions-* where the Resource Group should exist. Changing this forces a new Resource Group to be created."
+  description = "The Azure Regions * where the Resource Group should exist. Changing this forces a new Resource Group to be created."
 }
 
 variable "resource_group_name" {
