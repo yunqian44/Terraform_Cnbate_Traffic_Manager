@@ -1,10 +1,10 @@
-# terraform {
-#   backend "azurerm" {
-#     storage_account_name = "cnbateterraformstorage"
-#     container_name       = "terraform-state"
-#     key                  = "cnbate.terraform.stats"
-#   }
-# }
+terraform {
+  backend "azurerm" {
+    storage_account_name = var.storage_account_name
+    container_name       = var.container_name
+    key                  = var.key
+  }
+}
 
 provider "azurerm" {
   version = "~>2.0"
