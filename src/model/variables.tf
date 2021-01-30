@@ -166,7 +166,7 @@ variable "app_settings" {
     },
     {
       "ASPNETCORE_ENVIRONMENT" = "Production"
-      "Loaction"               = "Southeast Asia"
+      "Location"               = "Southeast Asia"
     }
   ]
   description = "(Optional) A key-value pair of app settings."
