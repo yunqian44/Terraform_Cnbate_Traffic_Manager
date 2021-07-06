@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - remote_stats
+env:
+  tf_version: "latest"
+  tf_working_dir: "./src/model/"
 jobs:
   terraform_init:
     name: "Terraform Init"
@@ -16,9 +19,9 @@ jobs:
       - name: "Terraform Initialization"
         uses: hashicorp/terraform-github-actions@master
         with:
-          tf_actions_version: 0.12.18
+          tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: "init"
-          working-directory: ./src/model/
+          tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -31,8 +34,8 @@ jobs:
       - name: "Terraform Initialization"
         uses: hashicorp/terraform-github-actions@master
         with:
-          tf_actions_version: 0.12.18
+          tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: "validate"
-          working-directory: ./src/model/
+          tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
