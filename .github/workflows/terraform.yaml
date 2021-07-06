@@ -4,12 +4,12 @@ on:
     branches:
       - remote_stats
     paths:
-      - src/model/**
+      - src/model/*
   push:
     branches:
       - remote_stats
     paths:
-      - src/model/**
+      - src/model/*
 jobs:
   terraform_init:
     name: "Terraform Init"
