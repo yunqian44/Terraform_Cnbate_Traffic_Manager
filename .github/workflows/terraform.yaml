@@ -3,9 +3,13 @@ on:
   pull_request:
     branches:
       - remote_stats
+    paths:
+      - src/model/**
   push:
     branches:
       - remote_stats
+    paths:
+      - src/model/**
 jobs:
   terraform:
     name: "Terraform Init"
