@@ -9,7 +9,43 @@ on:
 env:
   tf_version: "latest"
   tf_working_dir: "./src/model/"
+  terraform_rg: "Terraform Init"
+  storage_account: "init"
+  storage_account_container: "sdsd"
+  keyvault: "init"
+  keyvault_sc: "init"
 jobs:
+  storageaccount_create:
+    name: "Azure CLI Action"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          cred: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure CLI script
+        uses: azure@CLI@V1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            # create azure resource group
+            az group create --location eastasia --name $(terraform_rg)
+
+            # create azure storage account
+            az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
+
+            # create storage account container for tf state 
+            az storage container create --name $(storage_account_container) --account-name $(storage_account)
+
+            # query storage key and set variable
+            ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
+
+            # create azure keyvault
+            az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
+
+            # set keyvault secret,secret value is ACCOUNT_KEY
+            az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
+
   terraform_init:
     name: "Terraform Init"
     runs-on: ubuntu-latest
