@@ -9,7 +9,7 @@ on:
 env:
   tf_version: "latest"
   tf_working_dir: "./src/model/"
-  terraform_rg: "Terraform Init"
+  terraform_rg: "Web_Test_TF_RG"
   storage_account: "cnbatestorestatefile001"
   storage_account_container: "terraform-state"
   keyvault: "cnbateblogweb"
