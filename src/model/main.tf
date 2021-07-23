@@ -4,6 +4,13 @@ terraform {
     container_name       = "terraform-state"
     key                  = "cnbate.terraform.stats"
   }
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>2.0"
+    }
+  }
 }
 
 provider "azurerm" {
