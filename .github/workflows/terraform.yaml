@@ -10,13 +10,13 @@ env:
   tf_version: "latest"
   tf_working_dir: "./src/model/"
   terraform_rg: "Web_Test_TF_RG"
-  storage_account: "cnbatestorestatefile003"
+  storage_account: "cnbatestorestatefile004"
   storage_account_container: "terraform-state"
   keyvault: "cnbateblogweb"
   keyvault_sc: "terraform-stste-storage-key"
 jobs:
-  storageaccount_create:
-    name: "Azure CLI Action   "
+  terraform_auto_deploy:
+    name: "Azure CLI Action (secrect created)"
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
@@ -50,14 +50,7 @@ jobs:
 
             # set keyvault secret,secret value is ACCOUNT_KEY
             az keyvault secret set --name ${{ env.keyvault_sc }} --vault-name ${{ env.keyvault }}  --value $ACCOUNT_KEY
-
-  terraform_init:
-    name: "Terraform Init"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@master
-      - name: "Terraform Initialization"
+      - name: "Terraform Init"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
@@ -65,14 +58,7 @@ jobs:
           tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  terraform_plan:
-    name: "Terraform Validate"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@master
-      - name: "Terraform Initialization"
+      - name: "Terraform Plan"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
