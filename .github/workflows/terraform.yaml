@@ -42,7 +42,7 @@ jobs:
             az storage container create --name ${{ env.storage_account_container }} --account-name ${{ env.storage_account }}
 
             # query storage key and set variable
-            export ACCOUNT_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
+            export ARM_ACCESS_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
       - name: "Terraform Init"
         uses: hashicorp/terraform-github-actions@master
         with:
