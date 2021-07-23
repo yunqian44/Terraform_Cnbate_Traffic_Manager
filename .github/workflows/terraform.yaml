@@ -43,6 +43,8 @@ jobs:
 
             # query storage key and set variable
             export ARM_ACCESS_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
+
+            echo $ARM_ACCESS_KEY
       - name: "Terraform Init"
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -50,7 +52,7 @@ jobs:
           tf_actions_subcommand: "init"
           tf_actions_working_dir: ${{ env.tf_working_dir }}
           tf_actions_comment: true
-          args: '-backend-config="access_key=${{ARM_ACCESS_KEY}}"'
+          args: '-backend-config="access_key=$(ARM_ACCESS_KEY)"'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Terraform Validate"
