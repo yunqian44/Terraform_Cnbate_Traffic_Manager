@@ -12,6 +12,7 @@ env:
   terraform_rg: "Web_Test_TF_RG"
   storage_account: "cnbatestorestatefile004"
   storage_account_container: "terraform-state"
+  key: "cnbate.terraform.stats"
 jobs:
   terraform_auto_deploy:
     name: "Azure CLI Action (secrect created)"
@@ -46,7 +47,7 @@ jobs:
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init -backend-config="storage_account_name=${{ env.storage_account }}" -backend-config="container_name=${{ env.storage_account_container }}" -backend-config="key=${{ env.keyvault_sc }}"'
+          tf_actions_subcommand: 'init -backend-config="storage_account_name=${{ env.storage_account }}" -backend-config="container_name=${{ env.storage_account_container }}" -backend-config="key=${{ env.key }}"'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
