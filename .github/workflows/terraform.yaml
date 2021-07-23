@@ -45,7 +45,7 @@ jobs:
             export ARM_ACCESS_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
 
             echo $ARM_ACCESS_KEY
-      - name: "Terraform Init"
+      - name: "Terraform Init "
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
