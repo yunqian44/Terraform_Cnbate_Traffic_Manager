@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@remote_stats
+        uses: actions/checkout@master
       - name: Azure Login
         uses: azure/login@v1
         with:
