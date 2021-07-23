@@ -23,6 +23,7 @@ jobs:
         uses: azure/login@v1
         with:
           cred: ${{ secrets.AZURE_CREDENTIALS }}
+          environment: AzureCloud
       - name: Azure CLI script
         uses: azure@CLI@V1
         with:
