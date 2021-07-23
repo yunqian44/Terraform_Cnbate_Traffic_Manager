@@ -10,10 +10,10 @@ env:
   tf_version: "latest"
   tf_working_dir: "./src/model/"
   terraform_rg: "Terraform Init"
-  storage_account: "init"
-  storage_account_container: "sdsd"
-  keyvault: "init"
-  keyvault_sc: "init"
+  storage_account: "cnbatestorestatefile001"
+  storage_account_container: "terraform-state"
+  keyvault: "cnbateblogweb"
+  keyvault_sc: "terraform-stste-storage-key"
 jobs:
   storageaccount_create:
     name: "Azure CLI Action"
@@ -29,22 +29,22 @@ jobs:
           azcliversion: 2.0.72
           inlineScript: |
             # create azure resource group
-            az group create --location eastasia --name $(terraform_rg)
+            az group create --location eastasia --name ${{ env.terraform_rg }}
 
             # create azure storage account
-            az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
+            az storage account create --name ${{ env.storage_account }} --resource-group ${{ env.terraform_rg }} --location eastasia --sku Standard_LRS
 
             # create storage account container for tf state 
-            az storage container create --name $(storage_account_container) --account-name $(storage_account)
+            az storage container create --name ${{ env.storage_account_container }} --account-name ${{ env.storage_account }}
 
             # query storage key and set variable
-            ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
+            ACCOUNT_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
 
             # create azure keyvault
-            az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
+            az keyvault create --name ${{ env.keyvault }} --resource-group ${{ env.terraform_rg }} --location eastasia --enable-soft-delete false
 
             # set keyvault secret,secret value is ACCOUNT_KEY
-            az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
+            az keyvault secret set --name ${{ env.keyvault_sc }} --vault-name ${{ env.keyvault }}  --value $ACCOUNT_KEY
 
   terraform_init:
     name: "Terraform Init"
