@@ -51,8 +51,8 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: "init"
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-          tf_actions_comment: true
-          # args: '-backend-config=\"access_key=$ARM_ACCESS_KEY\"'
+          tf_actions_cli_credentials_hostname: app.terraform.io 
+          tf_actions_cli_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
         env:
           GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
