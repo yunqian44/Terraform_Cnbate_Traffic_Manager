@@ -16,7 +16,7 @@ env:
   keyvault_sc: "terraform-stste-storage-key"
 jobs:
   storageaccount_create:
-    name: "Azure CLI Action "
+    name: "Azure CLI Action   "
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
@@ -24,7 +24,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          cred: ${{ secrets.AZURE_CREDENTIALS }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Azure CLI script
         uses: azure/CLI@v1
         with:
