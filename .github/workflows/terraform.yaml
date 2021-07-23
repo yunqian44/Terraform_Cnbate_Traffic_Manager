@@ -47,7 +47,7 @@ jobs:
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init -backend-config="storage_account_name=${{ env.storage_account }}" -backend-config="container_name=${{ env.storage_account_container }}" -backend-config="key=${{ env.key }}"'
+          tf_actions_subcommand: "init"
           tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
