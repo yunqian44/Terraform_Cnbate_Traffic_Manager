@@ -10,7 +10,7 @@ env:
   tf_version: "latest"
   tf_working_dir: "./src/model/"
   terraform_rg: "Web_Test_TF_RG"
-  storage_account: "cnbatestorestatefile002"
+  storage_account: "cnbatestorestatefile003"
   storage_account_container: "terraform-state"
   keyvault: "cnbateblogweb"
   keyvault_sc: "terraform-stste-storage-key"
