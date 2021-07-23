@@ -12,8 +12,6 @@ env:
   terraform_rg: "Web_Test_TF_RG"
   storage_account: "cnbatestorestatefile004"
   storage_account_container: "terraform-state"
-  keyvault: "cnbateblogweb"
-  keyvault_sc: "terraform-stste-storage-key"
 jobs:
   terraform_auto_deploy:
     name: "Azure CLI Action (secrect created)"
@@ -43,18 +41,12 @@ jobs:
             az storage container create --name ${{ env.storage_account_container }} --account-name ${{ env.storage_account }}
 
             # query storage key and set variable
-            ACCOUNT_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
-
-            # create azure keyvault
-            az keyvault create --name ${{ env.keyvault }} --resource-group ${{ env.terraform_rg }} --location eastasia --enable-soft-delete false
-
-            # set keyvault secret,secret value is ACCOUNT_KEY
-            az keyvault secret set --name ${{ env.keyvault_sc }} --vault-name ${{ env.keyvault }}  --value $ACCOUNT_KEY
+            export ACCOUNT_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
       - name: "Terraform Init"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init -backend-config="storage_account_name=${{ env.storage_account }}" -backend-config="container_name=${{ env.storage_account_container }}" -backend-config="access_key=$ACCOUNT_KEY" -backend-config="key=${{ env.keyvault_sc }}"'
+          tf_actions_subcommand: "init"
           tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
