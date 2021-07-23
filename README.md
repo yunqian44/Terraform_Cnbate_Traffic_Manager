@@ -1,3 +1,4 @@
+[![ using GitHub Action for Terraform Auto CI/CD](https://github.com/yunqian44/Terraform_Cnbate_Traffic_Manager/actions/workflows/terraform.yaml/badge.svg)](https://github.com/yunqian44/Terraform_Cnbate_Traffic_Manager/actions/workflows/terraform.yaml)
 # Terraform_Azure_Cnbate_Traffic_Manager
 
 ## Description
