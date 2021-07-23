@@ -25,6 +25,9 @@ jobs:
         uses: azure/login@v1
         with:
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: false
+          environment: azurecloud
+          allow-no-subscriptions: false
       - name: Azure CLI script
         uses: azure/CLI@v1
         with:
