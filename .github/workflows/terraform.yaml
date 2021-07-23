@@ -51,10 +51,11 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: "init"
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-          # tf_actions_comment: true
+          tf_actions_comment: true
           # args: '-backend-config=\"access_key=$ARM_ACCESS_KEY\"'
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: "Terraform Validate"
         uses: hashicorp/terraform-github-actions@master
         with:
