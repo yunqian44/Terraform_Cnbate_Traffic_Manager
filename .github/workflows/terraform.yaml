@@ -16,7 +16,7 @@ env:
   keyvault_sc: "terraform-stste-storage-key"
 jobs:
   storageaccount_create:
-    name: "Azure CLI Action"
+    name: "Azure CLI Action "
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
