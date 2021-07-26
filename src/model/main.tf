@@ -24,7 +24,6 @@ locals {
 
 data "azurerm_resource_group" "cnbate_resource_group" {
   name = var.resource_group_name
-
 }
 
 module "cnbate_traffic_manager" {
