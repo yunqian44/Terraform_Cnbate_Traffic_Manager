@@ -16,7 +16,7 @@ This example provides recommended settings:
 
 + ### src
     + import: There had some already existing resources via manual creation when initially create resources via terraform . You need to mark these resource and use terraform import to include them in codes.
-    + model:  Provision and asseblme the actual infrastructure from YHU projects
+    + model:  Provision and asseblme the actual infrastructure from Terraform projects
     + module: Following best practices for Terraform template authoring, create a template deploying infrastructure components into Azure. You can custom some minimum size common components(also call as module) in this folder. In this project most of common modules from microsoft official module templates.   
 
 ## Get started with Terraform Cloud
