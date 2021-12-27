@@ -53,7 +53,7 @@ jobs:
 
             echo $ARM_ACCESS_KEY
 
-      - name: Terraform init azurerm backend
+      - name: "Terraform init azurerm backend"
         uses: ahmedig/terraform-azurerm-backend@v1
         with:
           azure_credentials: {{ secrets.AZURE_CREDENTIALS }}
