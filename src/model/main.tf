@@ -1,8 +1,16 @@
 terraform {
   backend "azurerm" {
+    resource_group_name  = "Web_Test_TF_RG"
     storage_account_name = "cnbateterraformstorage"
     container_name       = "terraform-state"
     key                  = "cnbate.terraform.stats"
+  }
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">=2.85.0"
+    }
   }
 }
 
