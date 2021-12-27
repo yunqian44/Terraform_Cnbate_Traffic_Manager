@@ -68,6 +68,8 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'init'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }} 
 
       - name: "Terraform Plan"
         uses: hashicorp/terraform-github-actions@master
@@ -75,8 +77,8 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'plan'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Deploy"
         uses: hashicorp/terraform-github-actions@master
@@ -84,5 +86,5 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'apply -auto-approve'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
