@@ -34,7 +34,7 @@ jobs:
           enable-AzPSSession: false
           environment: azurecloud
           allow-no-subscriptions: false
-          azcliversion: 2.30.0
+          # azcliversion: 2.30.0
           inlineScript: |
             # # set account
             # az account set --subscription Microsoft Azure MVP
