@@ -63,24 +63,21 @@ jobs:
           file_name: ${{ env.key }}
           subscription_id: 8558b627-87ea-4575-858d-c3c6722dbe38
           tf_working_directory: ${{ env.tf_working_dir }}
-      
-      # - name: "Terraform Init azurerm backend"
-      #   uses: hashicorp/terraform-github-actions@master
-      #   with:
-      #     tf_actions_version: ${{ env.tf_version }}
-      #     tf_actions_subcommand: "init"
-      #     tf_actions_comment: true
-      #     tf_actions_working_dir: ${{ env.tf_working_dir }}
-      #     tf_actions_cli_credentials_hostname: app.terraform.io
-      #     tf_actions_cli_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Validate"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: "validate"
+          tf_actions_working_dir: ${{ env.tf_working_dir }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Terraform Validate"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tf_actions_subcommand: "apply -auto-approve"
           tf_actions_working_dir: ${{ env.tf_working_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
