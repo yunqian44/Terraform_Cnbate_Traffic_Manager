@@ -34,7 +34,7 @@ jobs:
           enable-AzPSSession: false
           environment: azurecloud
           allow-no-subscriptions: false
-          # azcliversion: 2.30.0
+          azcliversion: 2.30.0
           inlineScript: |
             # # set account
             # az account set --subscription Microsoft Azure MVP
@@ -52,17 +52,29 @@ jobs:
             export ARM_ACCESS_KEY=$(az storage account keys list --resource-group ${{env.terraform_rg}} --account-name ${{ env.storage_account }} --query "[?keyName == 'key1'][value]" --output tsv)
 
             echo $ARM_ACCESS_KEY
-      - name: "Terraform Init azurerm backend"
-        uses: hashicorp/terraform-github-actions@master
+
+      - name: Terraform init azurerm backend
+        uses: ahmedig/terraform-azurerm-backend@v1
         with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: "init"
-          tf_actions_comment: true
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-          tf_actions_cli_credentials_hostname: app.terraform.io
-          tf_actions_cli_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+          azure_credentials: {{ secrets.AZURE_CREDENTIALS }}
+          resource_group_name: ${{ env.terraform_rg }}
+          container_name: ${{ env.storage_account_container }}
+          storage_account_name: ${{ env.storage_account }}
+          file_name: ${{ env.key }}
+          subscription_id: 8558b627-87ea-4575-858d-c3c6722dbe38
+          tf_working_directory: ${{ env.tf_working_dir }}
+      
+      # - name: "Terraform Init azurerm backend"
+      #   uses: hashicorp/terraform-github-actions@master
+      #   with:
+      #     tf_actions_version: ${{ env.tf_version }}
+      #     tf_actions_subcommand: "init"
+      #     tf_actions_comment: true
+      #     tf_actions_working_dir: ${{ env.tf_working_dir }}
+      #     tf_actions_cli_credentials_hostname: app.terraform.io
+      #     tf_actions_cli_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Validate"
         uses: hashicorp/terraform-github-actions@master
