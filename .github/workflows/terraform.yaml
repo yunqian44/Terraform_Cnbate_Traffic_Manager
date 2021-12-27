@@ -63,13 +63,15 @@ jobs:
             echo $ARM_ACCESS_KEY
 
       - name: "Terraform init azurerm backend"
-        uses: hashicorp/terraform-github-actions@master
+        uses: ahmedig/terraform-azurerm-backend@v1
         with:
-          tf_actions_version: ${{ env.tf_version }}
-          tf_actions_subcommand: 'init'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-          env:
-            GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          resource_group_name: ${{ env.terraform_rg }}
+          container_name: ${{ env.storage_account_container }} 
+          storage_account_name: ${{ env.storage_account }}
+          file_name: ${{ env.key }}
+          subscription_id: 8558b627-87ea-4575-858d-c3c6722dbe38
+          tf_working_directory: ${{ env.tf_working_dir }}
 
       - name: "Terraform Validate"
         uses: hashicorp/terraform-github-actions@master
@@ -77,8 +79,8 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'validate'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Plan"
         uses: hashicorp/terraform-github-actions@master
@@ -86,8 +88,8 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'plan'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Terraform Deploy"
         uses: hashicorp/terraform-github-actions@master
@@ -95,5 +97,5 @@ jobs:
           tf_actions_version: ${{ env.tf_version }}
           tf_actions_subcommand: 'apply'
           tf_actions_working_dir: ${{ env.tf_working_dir }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
