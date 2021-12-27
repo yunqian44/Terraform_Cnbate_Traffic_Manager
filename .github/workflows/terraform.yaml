@@ -30,10 +30,14 @@ jobs:
       - name: Azure CLI script
         uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: false
+          environment: azurecloud
+          allow-no-subscriptions: false
+          azcliversion: 2.30.0
           inlineScript: |
-            # set account
-            az account set --subscription Microsoft Azure MVP
+            # # set account
+            # az account set --subscription Microsoft Azure MVP
 
             # create azure resource group
             az group create --location eastasia --name ${{ env.terraform_rg }}
