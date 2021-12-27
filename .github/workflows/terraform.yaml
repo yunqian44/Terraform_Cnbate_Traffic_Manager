@@ -73,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: "Terraform Validate"
+      - name: "Terraform Deploy"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
