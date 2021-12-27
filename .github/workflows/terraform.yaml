@@ -73,7 +73,7 @@ jobs:
           subscription_id: 8558b627-87ea-4575-858d-c3c6722dbe38
           tf_working_directory: ${{ env.tf_working_dir }}
 
-       - name: "Terraform Validate"
+      - name: "Terraform Validate"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
