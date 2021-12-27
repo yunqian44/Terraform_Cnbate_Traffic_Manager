@@ -32,6 +32,9 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
+            # set account
+            az account set --subscription "Microsoft Azure MVP"
+
             # create azure resource group
             az group create --location eastasia --name ${{ env.terraform_rg }}
 
