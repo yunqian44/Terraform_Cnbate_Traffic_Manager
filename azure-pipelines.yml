@@ -1,0 +1,154 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- remote_stats
+
+pool:
+  vmImage: ubuntu-latest
+  
+variables:
+  - name: tf_version
+    value: 'latest'
+    
+
+
+stages:
+- stage: script
+  jobs:
+   - job: azure_cli_script
+     steps: 
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+              # create azure resource group
+              az group create --location eastasia --name $(terraform_rg)
+      
+              # create azure storage account
+              az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
+      
+              # create storage account container for tf state 
+              az storage container create --name $(storage_account_container) --account-name $(storage_account)
+      
+              # query storage key and set variable
+              ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
+      
+              # create azure keyvault
+              az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
+      
+              # set keyvault secret,secret value is ACCOUNT_KEY
+              az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
+
+- stage: validate
+  jobs:
+  - job: terraform_validate
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: ${{tf_version}}
+    - task: TerraformTaskV2@2
+      displayName: 'terraform init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: ${{ variables.backendServiceArm }}
+        backendAzureRmResourceGroupName: ${{ variables.backendAzureRmResourceGroupName }}
+        backendAzureRmStorageAccountName: ${{ variables.backendAzureRmStorageAccountName }}
+        backendAzureRmContainerName: ${{ variables.backendAzureRmContainerName }}
+        backendAzureRmKey: ${{ variables.backendAzureRmKey }}
+        workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+    - task: TerraformTaskV2@2
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
+        workingDirectory: '$(System.DefaultWorkingDirectory)//src/model/'
+
+- stage: plan
+  dependsOn: [validate]
+  condition: succeded('validate')
+  jobs:
+    - job: terraform_plan
+      steps:
+        - task: TerraformInstaller@0
+          inputs:
+            terraformVersion: ${{tf_version}}
+        - task: TerraformTaskV2@2
+          displayName: 'terraform init'
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: ${{ variables.backendServiceArm }}
+            backendAzureRmResourceGroupName: ${{ variables.backendAzureRmResourceGroupName }}
+            backendAzureRmStorageAccountName: ${{ variables.backendAzureRmStorageAccountName }}
+            backendAzureRmContainerName: ${{ variables.backendAzureRmContainerName }}
+            backendAzureRmKey: ${{ variables.backendAzureRmKey }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)//src/model/'
+
+- stage: apply
+  dependsOn: [plan]
+  condition: succeded('plan')
+  jobs:
+    - job: terraform_apply
+      steps:
+        - task: TerraformInstaller@0
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTaskV2@2
+          displayName: 'terraform init'
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: ${{ variables.backendServiceArm }}
+            backendAzureRmResourceGroupName: ${{ variables.backendAzureRmResourceGroupName }}
+            backendAzureRmStorageAccountName: ${{ variables.backendAzureRmStorageAccountName }}
+            backendAzureRmContainerName: ${{ variables.backendAzureRmContainerName }}
+            backendAzureRmKey: ${{ variables.backendAzureRmKey }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+- stage: destroy
+  dependsOn: [apply]
+  condition: succeded('apply')
+  jobs:
+    - job: terraform_destroy
+      steps:
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'destroy'
+            commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+
+
