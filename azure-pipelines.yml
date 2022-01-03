@@ -52,7 +52,7 @@ stages:
           RunAsPreJob: false
 
 
-- stage: validate
+- stage: terraform_validate
   jobs:
   - job: terraform_validate
     steps:
@@ -78,9 +78,9 @@ stages:
         environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
         workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
-- stage: plan
-  dependsOn: [validate]
-  condition: succeded('validate')
+- stage: terraform_plan
+  dependsOn: [terraform_validate]
+  condition: succeded('terraform_validate')
   jobs:
     - job: terraform_plan
       steps:
@@ -105,9 +105,9 @@ stages:
             command: 'plan'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
-- stage: apply
-  dependsOn: [plan]
-  condition: succeded('plan')
+- stage: terraform_apply
+  dependsOn: [terraform_plan]
+  condition: succeded('terraform_plan')
   jobs:
     - job: terraform_apply
       steps:
@@ -138,9 +138,9 @@ stages:
             commandOptions: '-auto-approve'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
-- stage: destroy
-  dependsOn: [apply]
-  condition: succeded('apply')
+- stage: terraform_destroy
+  dependsOn: [terraform_apply]
+  condition: succeded('terraform_apply')
   jobs:
     - job: terraform_destroy
       steps:
