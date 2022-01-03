@@ -67,7 +67,7 @@ stages:
         provider: 'azurerm'
         command: 'validate'
         environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
-        workingDirectory: '$(System.DefaultWorkingDirectory)//src/model/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
 - stage: plan
   dependsOn: [validate]
@@ -94,7 +94,7 @@ stages:
             provider: 'azurerm'
             command: 'plan'
             environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
-            workingDirectory: '$(System.DefaultWorkingDirectory)//src/model/'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
 - stage: apply
   dependsOn: [plan]
