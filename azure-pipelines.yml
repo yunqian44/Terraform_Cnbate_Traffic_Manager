@@ -80,7 +80,7 @@ stages:
 
 - stage: terraform_plan
   dependsOn: [terraform_validate]
-  condition: succeded('terraform_validate')
+  condition: succeeded('terraform_validate')
   jobs:
     - job: terraform_plan
       steps:
@@ -107,7 +107,7 @@ stages:
 
 - stage: terraform_apply
   dependsOn: [terraform_plan]
-  condition: succeded('terraform_plan')
+  condition: succeeded('terraform_plan')
   jobs:
     - job: terraform_apply
       steps:
@@ -140,7 +140,7 @@ stages:
 
 - stage: terraform_destroy
   dependsOn: [terraform_apply]
-  condition: succeded('terraform_apply')
+  condition: succeeded('terraform_apply')
   jobs:
     - job: terraform_destroy
       steps:
