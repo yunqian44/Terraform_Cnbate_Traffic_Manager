@@ -102,6 +102,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
 - stage: terraform_apply
@@ -129,12 +130,14 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
         - task: TerraformTaskV2@2
           inputs:
             provider: 'azurerm'
             command: 'apply'
             commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
 - stage: terraform_destroy
@@ -147,12 +150,14 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
         - task: TerraformTaskV2@2
           inputs:
             provider: 'azurerm'
             command: 'destroy'
             commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
 
