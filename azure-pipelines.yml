@@ -65,17 +65,16 @@ stages:
         provider: 'azurerm'
         command: 'init'
         commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
-        # backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
-        # backendAzureRmResourceGroupName: 'Web_Test_TF_RG'
-        # backendAzureRmStorageAccountName: cnbateterraformstorage1
-        # backendAzureRmContainerName: 'terraform-state'
-        # backendAzureRmKey: cnbate.terraform.stats
+        backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+        backendAzureRmResourceGroupName: $(terraform_rg)
+        backendAzureRmStorageAccountName: $(storage_account)
+        backendAzureRmContainerName: $(storage_account_container)
+        backendAzureRmKey: $(container_key)
         workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'validate'
-        environmentServiceNameAzureRM: ${{ variables.backendServiceArm }}
         workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
 
 - stage: terraform_plan
@@ -93,11 +92,10 @@ stages:
             provider: 'azurerm'
             command: 'init'
             commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
-            # backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
-            # backendAzureRmResourceGroupName: 'Web_Test_TF_RG'
-            # backendAzureRmStorageAccountName: cnbateterraformstorage1
-            # backendAzureRmContainerName: 'terraform-state'
-            # backendAzureRmKey: cnbate.terraform.stats
+            backendAzureRmResourceGroupName: $(terraform_rg)
+            backendAzureRmStorageAccountName: $(storage_account)
+            backendAzureRmContainerName: $(storage_account_container)
+            backendAzureRmKey: $(container_key)
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
         - task: TerraformTaskV2@2
           inputs:
@@ -120,11 +118,10 @@ stages:
             provider: 'azurerm'
             command: 'init'
             commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
-            # backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
-            # backendAzureRmResourceGroupName: 'Web_Test_TF_RG'
-            # backendAzureRmStorageAccountName: cnbateterraformstorage1
-            # backendAzureRmContainerName: 'terraform-state'
-            # backendAzureRmKey: cnbate.terraform.stats
+            backendAzureRmResourceGroupName: $(terraform_rg)
+            backendAzureRmStorageAccountName: $(storage_account)
+            backendAzureRmContainerName: $(storage_account_container)
+            backendAzureRmKey: $(container_key)
             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
         - task: TerraformTaskV2@2
           inputs:
