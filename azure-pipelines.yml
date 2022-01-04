@@ -92,6 +92,7 @@ stages:
             provider: 'azurerm'
             command: 'init'
             # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+            backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             backendAzureRmResourceGroupName: $(terraform_rg)
             backendAzureRmStorageAccountName: $(storage_account)
             backendAzureRmContainerName: $(storage_account_container)
@@ -118,6 +119,7 @@ stages:
             provider: 'azurerm'
             command: 'init'
             # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+            backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
             backendAzureRmResourceGroupName: $(terraform_rg)
             backendAzureRmStorageAccountName: $(storage_account)
             backendAzureRmContainerName: $(storage_account_container)
