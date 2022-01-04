@@ -85,7 +85,7 @@ stages:
       steps:
         - task: TerraformInstaller@0
           inputs:
-            terraformVersion: ${{ variables.backendServiceArm }}
+            terraformVersion: ${{ variables.tf_version }}
         - task: TerraformTaskV2@2
           displayName: 'terraform init'
           inputs:
@@ -111,7 +111,7 @@ stages:
       steps:
         - task: TerraformInstaller@0
           inputs:
-            terraformVersion: ${{ variables.backendServiceArm }}
+            terraformVersion: ${{ variables.tf_version }}
         - task: TerraformTaskV2@2
           displayName: 'terraform init'
           inputs:
