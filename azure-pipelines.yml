@@ -48,7 +48,7 @@ stages:
         inputs:
           azureSubscription: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
           KeyVaultName: '$(keyvault)'
-          SecretsFilter: '$(keyvault_sc)'
+          SecretsFilter: 'terraform-stste-storage-key'
           RunAsPreJob: false
 
 
