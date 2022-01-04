@@ -55,6 +55,7 @@ stages:
   jobs:
   - job: terraform_validate
     steps:
+    - checkout: self
     - task: TerraformInstaller@0
       inputs:
         terraformVersion: ${{variables.tf_version}}
@@ -82,6 +83,7 @@ stages:
   jobs:
     - job: terraform_plan
       steps:
+        - checkout: self
         - task: TerraformInstaller@0
           inputs:
             terraformVersion: ${{ variables.tf_version }}
