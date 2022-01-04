@@ -91,7 +91,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+            # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
             backendAzureRmResourceGroupName: $(terraform_rg)
             backendAzureRmStorageAccountName: $(storage_account)
             backendAzureRmContainerName: $(storage_account_container)
@@ -117,7 +117,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+            # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
             backendAzureRmResourceGroupName: $(terraform_rg)
             backendAzureRmStorageAccountName: $(storage_account)
             backendAzureRmContainerName: $(storage_account_container)
