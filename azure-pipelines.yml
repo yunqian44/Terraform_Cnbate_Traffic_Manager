@@ -116,6 +116,7 @@ stages:
        runOnce:
         deploy:
           steps:
+            - checkout: none
             - task: TerraformInstaller@0
               inputs:
                 terraformVersion: ${{ variables.tf_version }}
