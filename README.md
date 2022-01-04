@@ -1,4 +1,5 @@
 [![ using GitHub Action for Terraform Auto CI/CD](https://github.com/yunqian44/Terraform_Cnbate_Traffic_Manager/actions/workflows/terraform.yaml/badge.svg)](https://github.com/yunqian44/Terraform_Cnbate_Traffic_Manager/actions/workflows/terraform.yaml)
+[![Build Status](https://qianyun.visualstudio.com/Terraform_Cnbate_Traffic_Manager/_apis/build/status/yunqian44.Terraform_Cnbate_Traffic_Manager?branchName=remote_stats)](https://qianyun.visualstudio.com/Terraform_Cnbate_Traffic_Manager/_build/latest?definitionId=6&branchName=remote_stats)
 # Terraform_Azure_Cnbate_Traffic_Manager
 
 ## Description
