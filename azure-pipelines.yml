@@ -1,0 +1,220 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- remote_stats
+
+pool:
+  vmImage: ubuntu-latest
+  
+variables:
+  - name: tf_version
+    value: 'latest'
+
+stages:
+- stage: script
+  jobs:
+   - job: azure_cli_script
+     steps: 
+      - task: AzureCLI@2
+        displayName: 'Azure CLI :Create Storage Account，Key Vault And Set KeyVault Secret'
+        inputs:
+          azureSubscription: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+              # create azure resource group
+              az group create --location eastasia --name $(terraform_rg)
+      
+              # create azure storage account
+              az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
+      
+              # create storage account container for tf state 
+              az storage container create --name $(storage_account_container) --account-name $(storage_account)
+      
+              # query storage key and set variable
+              ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
+      
+              # create azure keyvault
+              az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
+      
+              # set keyvault secret,secret value is ACCOUNT_KEY
+              az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
+       
+      - task: AzureKeyVault@2
+        displayName: 'Azure Key Vault :Get Storage Access Secret'
+        inputs:
+          azureSubscription: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+          KeyVaultName: '$(keyvault)'
+          SecretsFilter: 'terraform-stste-storage-key'
+          RunAsPreJob: false
+
+- stage: terraform_validate
+  jobs:
+  - job: terraform_validate
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: ${{variables.tf_version}}
+    - task: TerraformTaskV2@2
+      displayName: 'terraform init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+        backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+        backendAzureRmResourceGroupName: $(terraform_rg)
+        backendAzureRmStorageAccountName: $(storage_account)
+        backendAzureRmContainerName: $(storage_account_container)
+        backendAzureRmKey: $(container_key)
+        workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+    - task: TerraformTaskV2@2
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+- stage: terraform_plan
+  dependsOn: [terraform_validate]
+  condition: succeeded('terraform_validate')
+  jobs:
+    - job: terraform_plan
+      steps:
+        - task: TerraformInstaller@0
+          inputs:
+            terraformVersion: ${{ variables.tf_version }}
+        - task: TerraformTaskV2@2
+          displayName: 'terraform init'
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+            backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+            backendAzureRmResourceGroupName: $(terraform_rg)
+            backendAzureRmStorageAccountName: $(storage_account)
+            backendAzureRmContainerName: $(storage_account_container)
+            backendAzureRmKey: $(container_key)
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+- stage: terraform_apply
+  dependsOn: [terraform_plan]
+  condition: succeeded('terraform_plan')
+  jobs:
+    - deployment: terraform_apply
+      continueOnError: false
+      environment: 'Approve_Production'
+      timeoutInMinutes: 120
+      strategy:
+       runOnce:
+        deploy:
+          steps:
+            - checkout: self
+            - task: TerraformInstaller@0
+              inputs:
+                terraformVersion: ${{ variables.tf_version }}
+            - task: TerraformTaskV2@2
+              displayName: 'terraform init'
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+                backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+                backendAzureRmResourceGroupName: $(terraform_rg)
+                backendAzureRmStorageAccountName: $(storage_account)
+                backendAzureRmContainerName: $(storage_account_container)
+                backendAzureRmKey: $(container_key)
+                workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+            - task: TerraformTaskV2@2
+              inputs:
+                provider: 'azurerm'
+                command: 'plan'
+                environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+                workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+            - task: TerraformTaskV2@2
+              inputs:
+                provider: 'azurerm'
+                command: 'apply'
+                commandOptions: '-auto-approve'
+                environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+                workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+# - stage: terraform_apply
+#   dependsOn: [terraform_plan]
+#   condition: succeeded('terraform_plan')
+#   jobs:
+#     - job: terraform_apply
+#       steps:
+#         - task: TerraformInstaller@0
+#           inputs:
+#             terraformVersion: ${{ variables.tf_version }}
+#         - task: TerraformTaskV2@2
+#           displayName: 'terraform init'
+#           inputs:
+#             provider: 'azurerm'
+#             command: 'init'
+#             # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+#             backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+#             backendAzureRmResourceGroupName: $(terraform_rg)
+#             backendAzureRmStorageAccountName: $(storage_account)
+#             backendAzureRmContainerName: $(storage_account_container)
+#             backendAzureRmKey: $(container_key)
+#             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+#         - task: TerraformTaskV2@2
+#           inputs:
+#             provider: 'azurerm'
+#             command: 'plan'
+#             environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+#             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+#         - task: TerraformTaskV2@2
+#           inputs:
+#             provider: 'azurerm'
+#             command: 'apply'
+#             commandOptions: '-auto-approve'
+#             environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+#             workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+- stage: terraform_destroy
+  dependsOn: [terraform_apply]
+  condition: succeeded('terraform_apply')
+  jobs:
+    - job: terraform_destroy
+      steps:
+        - task: TerraformInstaller@0
+          inputs:
+            terraformVersion: ${{ variables.tf_version }}
+        - task: TerraformTaskV2@2
+          displayName: 'terraform init'
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            # commandOptions: '-backend-config="access_key=$(terraform-stste-storage-key)"'
+            backendServiceArm: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+            backendAzureRmResourceGroupName: $(terraform_rg)
+            backendAzureRmStorageAccountName: $(storage_account)
+            backendAzureRmContainerName: $(storage_account_container)
+            backendAzureRmKey: $(container_key)
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'destroy'
+            commandOptions: '-auto-approve'
+            environmentServiceNameAzureRM: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/src/model/'
+
+
+
