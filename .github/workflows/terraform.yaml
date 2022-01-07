@@ -70,7 +70,7 @@ jobs:
           container_name: ${{ env.storage_account_container }} 
           storage_account_name: ${{ env.storage_account }}
           file_name: ${{ env.key }}
-          subscription_id: 8558b627-87ea-4575-858d-c3c6722dbe38
+          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tf_working_directory: ${{ env.tf_working_dir }}
 
       - name: "Terraform Validate"
