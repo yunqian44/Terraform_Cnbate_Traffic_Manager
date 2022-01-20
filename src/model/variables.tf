@@ -76,7 +76,7 @@ variable "traffic_manager_endpoint_names" {
     "cnbateblogweb_webapp01_performance",
     "cnbateblogweb_webapp02_performance"
   ]
-  description = "(required) The name of the Traffic Manager endpoint."
+  description = "(required) The names of the Traffic Manager endpoint."
 }
 
 variable "traffic_manager_endpoint_type" {
@@ -119,7 +119,7 @@ variable "app_service_plan_names" {
     "cnbate_appserviceplan01",
     "cnbate_appserviceplan02"
   ]
-  description = "(required) name of create a web app plan"
+  description = "(required) names of create a web app plan"
 }
 
 variable "app_service_plans" {
@@ -133,7 +133,7 @@ variable "app_service_plans" {
       tier = "Standard",
       size = "S1"
   }]
-  description = "(required) sku of create a web app plan"
+  description = "(required) sku of create a web app plan (map list)"
 }
 
 variable "enable_app_service" {
