@@ -14,4 +14,8 @@ output "cnbate_Web_app_names" {
   value = module.cnbate_Web_app.azurerm_app_service_names
 }
 
+output "cnbate_Web_app_urls" {
+  value = module.cnbate_Web_app.default_site_hostnames
+}
+
 
