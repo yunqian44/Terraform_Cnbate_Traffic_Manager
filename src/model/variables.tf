@@ -151,8 +151,8 @@ variable "app_service_count" {
 variable "app_service_names" {
   type = list(string)
   default = [
-    "CnBateBlogWeb01",
-    "CnBateBlogWeb02"
+    "cnbateblogweb01",
+    "cnbateblogweb02"
   ]
   description = "(required) specifies the name of the app service."
 }
