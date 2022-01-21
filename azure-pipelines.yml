@@ -8,6 +8,16 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+
+parameters:
+  - name: deployEnv
+    displayName: Selecting a Deployment Environment???
+    type: string
+    default: 'dev'
+    values:
+    - dev
+    - uat
+    - prd
   
 variables:
   - name: tf_version
