@@ -12,6 +12,13 @@ pool:
 variables:
   - name: tf_version
     value: 'latest'
+  - name: env_name
+    ${{if eq (parameters['deployEnv'],'dev')}}:
+      value: 'dev'
+    ${{if eq (parameters['DeployEnv'],'uat')}}:
+      value: 'uat'
+    ${{if eq (parameters['DeployEnv'],'prd')}}:
+      value: 'prd'
 
 stages:
 - stage: script
