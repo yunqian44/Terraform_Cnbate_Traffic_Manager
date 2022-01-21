@@ -1,13 +1,14 @@
 terraform {
   backend "azurerm" {
-    storage_account_name = "cnbateterraformstorage"
+    storage_account_name = "cnbatestorestatefile004"
     container_name       = "terraform-state"
     key                  = "cnbate.terraform.stats"
   }
 
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
+      version = "2.92.0"
     }
   }
 }
