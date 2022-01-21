@@ -23,11 +23,11 @@ variables:
   - name: tf_version
     value: 'latest'
   - name: env_name
-    ${{eq(parameters['deployEnv'],'dev') }}:
+    ${{ if eq(parameters['deployEnv'],'dev') }}:
       value: 'dev'
-    ${{eq(parameters['DeployEnv'],'uat') }}:
+    ${{ if eq(parameters['DeployEnv'],'uat') }}:
       value: 'uat'
-    ${{eq(parameters['DeployEnv'],'prd') }}:
+    ${{ if eq(parameters['DeployEnv'],'prd') }}:
       value: 'prd'
 
 stages:
