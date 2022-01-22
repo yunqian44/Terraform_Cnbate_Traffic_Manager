@@ -25,9 +25,9 @@ variables:
   - name: env_name
     ${{ if eq(parameters['deployEnv'],'dev') }}:
       value: 'dev'
-    ${{else if eq(parameters['DeployEnv'],'uat') }}:
+    ${{elseif eq(parameters['DeployEnv'],'uat') }}:
       value: 'uat'
-    ${{else if eq(parameters['DeployEnv'],'prd') }}:
+    ${{elseif eq(parameters['DeployEnv'],'prd') }}:
       value: 'prd'
 
 stages:
