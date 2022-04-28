@@ -62,7 +62,7 @@ stages:
              # echo TEST_KEY
              # echo 'TEST_KEY is $TEST_KEY'
 
-- stage: echo varibale
+- stage: echo_varibale
   jobs:
     - job: different_stage_echo
       variables:
