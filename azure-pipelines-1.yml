@@ -1,0 +1,77 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- remote_stats
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: script
+  jobs:
+   - job: azure_cli_script
+     steps: 
+      - task: AzureCLI@2
+        displayName: 'Azure CLI :Create Storage Account，Key Vault And Set KeyVault Secret'
+        name: 'output_variable'
+        inputs:
+          azureSubscription: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+          scriptType: 'bash'
+          addSpnToEnvironment: true
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+              # create azure resource group
+              az group create --location eastasia --name $(terraform_rg)
+      
+              # create azure storage account
+              az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
+      
+              # create storage account container for tf state 
+              az storage container create --name $(storage_account_container) --account-name $(storage_account)
+      
+              # query storage key and set variable
+              ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
+      
+              # create azure keyvault
+              az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
+      
+              # set keyvault secret,secret value is ACCOUNT_KEY
+              az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
+
+              # set common variable
+              TEST_KEY=p@ssw0rd
+
+              # set common varivale and add to environment
+              echo "##vso[task.setvariable variable=TEST_KEY;isOutput=true]$TEST_KEY" 
+
+              # set secret varivale and add to environment
+              echo "##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY" 
+       
+   - job: same_stage_echo
+     variables:
+       TEST_KEY: $[dependencies.azure_cli_script.outputs['output_variable.TEST_KEY']]
+     steps:
+       - task: Bash@3
+         displayName: 'Bash :output temporary variables in different jobs on the same stage'
+         inputs:
+           targetType: 'inline'
+           script: |
+             # echo TEST_KEY
+             echo 'TEST_KEY is $TEST_KEY'
+
+- stage: echo varibale
+  jobs:
+    - job: different_stage_echo
+      variables:
+        TEST_KEY: $[stageDependencies.script.azure_cli_script.outputs['output_variable.TEST_KEY']]
+      steps:
+        - task: Bash@3
+          displayName: 'Bash :output temporary variables in same jobs on the same stage'
+          inputs:
+            targetType: 'inline'
+            script: |
+              # echo TEST_KEY
+              echo 'TEST_KEY is $TEST_KEY'
