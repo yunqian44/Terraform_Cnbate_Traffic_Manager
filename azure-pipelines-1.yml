@@ -45,15 +45,15 @@ stages:
               TEST_KEY=p@ssw0rd
 
               # set common varivale and add to environment
-              echo '##vso[task.setvariable variable=TEST_KEY;isOutput=true]$TEST_KEY'
-              echo '##vso[task.setvariable variable=ACCOUNT_KEY;isOutput=true]$ACCOUNT_KEY'
+              echo "##vso[task.setvariable variable=TEST_KEY_SET;isOutput=true]$TEST_KEY"
+              echo "##vso[task.setvariable variable=ACCOUNT_KEY_SET;isOutput=true]$ACCOUNT_KEY"
 
               # set secret varivale and add to environment
-              #echo '##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY' 
+              #echo "##vso[task.setvariable variable=ACCOUNT_KEY_SET;issecret=true;isOutput=true]$ACCOUNT_KEY"
        
    - job: same_stage_echo
      variables:
-       ACCOUNT_KEY: $[dependencies.azure_cli_script.outputs['output_variable.ACCOUNT_KEY']]
+       ACCOUNT_KEY_SET: $[dependencies.azure_cli_script.outputs['output_variable.ACCOUNT_KEY_SET']]
      steps:
        - task: Bash@3
          displayName: 'Bash :output temporary variables in different jobs on the same stage'
@@ -61,7 +61,7 @@ stages:
            targetType: 'inline'
            script: |
              # echo TEST_KEY
-             echo "TEST_KEY is $ACCOUNT_KEY"
+             echo "TEST_KEY is $ACCOUNT_KEY_SET"
 
 - stage: echo_varibale
   jobs:
