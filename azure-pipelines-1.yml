@@ -45,10 +45,10 @@ stages:
               TEST_KEY=p@ssw0rd
 
               # set common varivale and add to environment
-              #echo '##vso[task.setvariable variable=TEST_KEY;isOutput=true]$TEST_KEY'
+              echo '##vso[task.setvariable variable=TEST_KEY;isOutput=true]$TEST_KEY'
 
               # set secret varivale and add to environment
-              #echo '##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY' 
+              echo '##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY' 
        
    - job: same_stage_echo
      variables:
@@ -60,7 +60,7 @@ stages:
            targetType: 'inline'
            script: |
              # echo TEST_KEY
-             # echo 'TEST_KEY is $TEST_KEY'
+             echo 'TEST_KEY is $TEST_KEY'
 
 - stage: echo_varibale
   jobs:
@@ -74,4 +74,4 @@ stages:
             targetType: 'inline'
             script: |
               # echo TEST_KEY
-              # echo 'TEST_KEY is $TEST_KEY'
+              echo 'TEST_KEY is $TEST_KEY'
