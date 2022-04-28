@@ -41,13 +41,6 @@ stages:
               # set keyvault secret,secret value is ACCOUNT_KEY
               az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
 
-              # set common variable
-              TEST_KEY=p@ssw0rd
-
-              # set common varivale and add to environment
-              echo "##vso[task.setvariable variable=TEST_KEY_SET;isOutput=true]$TEST_KEY"
-              echo "##vso[task.setvariable variable=ACCOUNT_KEY;isOutput=true]$ACCOUNT_KEY"
-
               # set secret varivale and add to environment
               #echo "##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY"
        
