@@ -52,6 +52,7 @@ stages:
               #echo "##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY"
        
    - job: same_stage_echo
+     dependsOn: azure_cli_script
      variables:
        ACCOUNT_KEY: $[dependencies.azure_cli_script.outputs['output_variable.ACCOUNT_KEY']]
      steps:
@@ -60,10 +61,11 @@ stages:
          inputs:
            targetType: 'inline'
            script: |
-             # echo TEST_KEY
-             echo "TEST_KEY is $ACCOUNT_KEY"
+             # echo ACCOUNT_KEY
+             echo "ACCOUNT_KEY is $ACCOUNT_KEY"
 
 - stage: echo_varibale
+  dependsOn: script
   jobs:
     - job: different_stage_echo
       variables:
@@ -74,5 +76,5 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              # echo TEST_KEY
-              echo "TEST_KEY is $ACCOUNT_KEY"
+              # echo ACCOUNT_KEY
+              echo "ACCOUNT_KEY is $ACCOUNT_KEY"
