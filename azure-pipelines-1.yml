@@ -67,7 +67,7 @@ stages:
   jobs:
     - job: different_stage_echo
       variables:
-        TEST_KEY: $[stageDependencies.script.azure_cli_script.outputs['output_variable.ACCOUNT_KEY']]
+        ACCOUNT_KEY: $[stageDependencies.script.azure_cli_script.outputs['output_variable.ACCOUNT_KEY']]
       steps:
         - task: Bash@3
           displayName: 'Bash :output temporary variables in same jobs on the same stage'
