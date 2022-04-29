@@ -49,10 +49,10 @@ variable "resource_group_name" {
   description = "The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created."
 }
 
-variable "app_service_plans" {
-  description = "A map of sku to apply to web app plan"
-  type        = list(map(string))
-}
+# variable "app_service_plans" {
+#   description = "A map of sku to apply to web app plan"
+#   type        = list(map(string))
+# }
 
 variable "app_settings" {
   description = "A list(map(string)) of app_settings to apply to web app"
