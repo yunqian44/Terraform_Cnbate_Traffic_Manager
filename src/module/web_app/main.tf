@@ -4,10 +4,14 @@ resource "azurerm_app_service_plan" "app_service_plan" {
   location            = element(var.app_service_locations, count.index)
   resource_group_name = var.resource_group_name
 
-  sku {
-    tier = lookup(element(var.app_service_plans, count.index), "tier")
-    size = lookup(element(var.app_service_plans, count.index), "size")
-  }
+  # sku {
+  #   tier = lookup(element(var.app_service_plans, count.index), "tier")
+  #   size = lookup(element(var.app_service_plans, count.index), "size")
+  # }
+
+  os_type  = element(var.os_types, count.index)
+  sku_name = element(var.sku_names, count.index)
+
 }
 
 resource "azurerm_app_service" "app_service" {
