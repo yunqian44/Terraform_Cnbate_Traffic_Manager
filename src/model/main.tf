@@ -8,7 +8,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "2.92.0"
+      version = ">=3.3.0"
     }
   }
 }
@@ -52,7 +52,9 @@ module "cnbate_Web_app" {
   enable_app_service_plan = var.enable_app_service_plan
   app_service_plan_count  = var.app_service_plan_count
   app_service_plan_names  = var.app_service_plan_names
-  app_service_plans       = var.app_service_plans
+  #app_service_plans       = var.app_service_plans
+  os_types  = var.os_types
+  sku_names = var.sku_names
 
   enable_app_service = var.enable_app_service
   app_service_count  = var.app_service_count

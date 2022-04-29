@@ -17,14 +17,14 @@ variable "key" {
   description = "(required)The Container Key Name for terraform the remote storage status file"
 }
 
-########################## resource group #########################
+########################## resource group start #########################
 variable "resource_group_name" {
   type        = string
   default     = "Web_Test_TF_RG"
   description = "(required)The name of the resource group"
 }
 
-########################## resource group #########################
+########################## resource group end #########################
 
 variable "traffic_manager_name" {
   type        = string
@@ -122,19 +122,38 @@ variable "app_service_plan_names" {
   description = "(required) names of create a web app plan"
 }
 
-variable "app_service_plans" {
-  type = list(map(string))
+# variable "app_service_plans" {
+#   type = list(map(string))
+#   default = [
+#     {
+#       tier = "Standard",
+#       size = "S1"
+#     },
+#     {
+#       tier = "Standard",
+#       size = "S1"
+#   }]
+#   description = "(required) sku of create a web app plan (map list)"
+# }
+
+variable "os_types" {
+  type = list(string)
   default = [
-    {
-      tier = "Standard",
-      size = "S1"
-    },
-    {
-      tier = "Standard",
-      size = "S1"
-  }]
-  description = "(required) sku of create a web app plan (map list)"
+    "WindowsContainer",
+    "WindowsContainer"
+  ]
+  description = "((Required) The O/S type for the App Services to be hosted in this plan. Possible values include Windows, Linux, and WindowsContainer"
 }
+
+variable "sku_names" {
+  type = list(string)
+  default = [
+    "P1V2",
+    "P1V2"
+  ]
+  description = "(Required) The SKU for the plan."
+}
+
 
 variable "enable_app_service" {
   type        = bool
