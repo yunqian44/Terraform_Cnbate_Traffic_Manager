@@ -19,7 +19,7 @@ provider "azurerm" {
 
 locals {
   location_eastAsia      = "East Asia"
-  location_southeastAsia = "Southeast Asia"
+  location_southeastAsia = "Japan East"
 }
 
 data "azurerm_resource_group" "cnbate_resource_group" {
@@ -52,9 +52,9 @@ module "cnbate_Web_app" {
   enable_app_service_plan = var.enable_app_service_plan
   app_service_plan_count  = var.app_service_plan_count
   app_service_plan_names  = var.app_service_plan_names
-  #app_service_plans       = var.app_service_plans
-  os_types  = var.os_types
-  sku_names = var.sku_names
+  app_service_plans       = var.app_service_plans
+  # os_types  = var.os_types
+  # sku_names = var.sku_names
 
   enable_app_service = var.enable_app_service
   app_service_count  = var.app_service_count

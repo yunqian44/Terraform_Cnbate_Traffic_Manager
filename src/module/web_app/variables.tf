@@ -49,10 +49,10 @@ variable "resource_group_name" {
   description = "The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created."
 }
 
-# variable "app_service_plans" {
-#   description = "A map of sku to apply to web app plan"
-#   type        = list(map(string))
-# }
+variable "app_service_plans" {
+  description = "A map of sku to apply to web app plan"
+  type        = list(map(string))
+}
 
 variable "app_settings" {
   description = "A list(map(string)) of app_settings to apply to web app"
@@ -60,15 +60,15 @@ variable "app_settings" {
 }
 
 
-variable "os_types" {
-  type        = list(string)
-  description = "(Required) The O/S type for the App Services to be hosted in this plan. Possible values include Windows, Linux, and WindowsContainer"
-}
+# variable "os_types" {
+#   type        = list(string)
+#   description = "(Required) The O/S type for the App Services to be hosted in this plan. Possible values include Windows, Linux, and WindowsContainer"
+# }
 
-variable "sku_names" {
-  type        = list(string)
-  description = " (Required) The SKU for the plan. "
-}
+# variable "sku_names" {
+#   type        = list(string)
+#   description = " (Required) The SKU for the plan. "
+# }
 
 
 
