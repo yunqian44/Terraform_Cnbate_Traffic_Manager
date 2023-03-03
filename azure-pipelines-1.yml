@@ -18,32 +18,32 @@ stages:
         displayName: 'Azure CLI :Create Storage Account，Key Vault And Set KeyVault Secret'
         name: 'output_variable'
         inputs:
-          azureSubscription: 'Microsoft Azure MVP(8558b627-87ea-4575-858d-c3c6722dbe38)'
+          azureSubscription: 'VS Enterprise'
           scriptType: 'bash'
-          addSpnToEnvironment: true
           scriptLocation: 'inlineScript'
           inlineScript: |
-              # create azure resource group
-              az group create --location eastasia --name $(terraform_rg)
-      
-              # create azure storage account
-              az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
-      
-              # create storage account container for tf state 
-              az storage container create --name $(storage_account_container) --account-name $(storage_account)
-      
-              # query storage key and set variable
-              ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
-      
-              # create azure keyvault
-              az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
-      
-              # set keyvault secret,secret value is ACCOUNT_KEY
-              az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
-
-              # set secret varivale and add to environment
-              echo "##vso[task.setvariable variable=ACCOUNT_KEY;isOutput=true]$ACCOUNT_KEY"
-              #echo "##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY"
+            # create azure resource group
+            az group create --location eastasia --name $(terraform_rg)
+            
+            # create azure storage account
+            az storage account create --name $(storage_account) --resource-group $(terraform_rg) --location eastasia --sku Standard_LRS
+            
+            # create storage account container for tf state 
+            az storage container create --name $(storage_account_container) --account-name $(storage_account)
+            
+            # query storage key and set variable
+            ACCOUNT_KEY=$(az storage account keys list --resource-group $(terraform_rg) --account-name $(storage_account) --query "[?keyName == 'key1'][value]" --output tsv)
+            
+            # create azure keyvault
+            az keyvault create --name $(keyvault) --resource-group $(terraform_rg) --location eastasia --enable-soft-delete false
+            
+            # set keyvault secret,secret value is ACCOUNT_KEY
+            az keyvault secret set --name $(keyvault_sc) --vault-name $(keyvault)  --value $ACCOUNT_KEY
+            
+            # set secret varivale and add to environment
+            echo "##vso[task.setvariable variable=ACCOUNT_KEY;isOutput=true]$ACCOUNT_KEY"
+            #echo "##vso[task.setvariable variable=ACCOUNT_KEY;issecret=true;isOutput=true]$ACCOUNT_KEY"
+          addSpnToEnvironment: true
        
    - job: same_stage_echo
      dependsOn: azure_cli_script
